@@ -1,0 +1,33 @@
+# Node.js
+node_modules/
+.env
+.env.local
+*.local
+*.log
+
+# Build y dependencias
+dist/
+build/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Archivos temporales y de respaldo
+*.zip
+*.rar
+*.bak
+*.tmp
+
+# Cobertura de tests
+coverage/
+
+# Otros (si usas Docker o servidores locales)
+*.pid
