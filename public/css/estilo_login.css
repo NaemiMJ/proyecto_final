@@ -1,3 +1,94 @@
 /*
 Estilos específicos para la página de login.html
-*/
+*/body {
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: center;
+     align-items: center;
+    height: 100vh;
+ }
+.login-container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    padding-top: 5px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+.logo {
+    display: block;
+    font-size: 70px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    color: #523b81;
+    text-shadow:
+        -4px -4px 0 #baa0f0,
+        4px -4px 0 #baa0f0,
+        -4px 4px 0 #baa0f0,
+        4px 4px 0 #baa0f0;
+}
+ 
+        .logo span {
+            color: #8969c8;
+            font-size: 16px;
+            text-shadow: none;
+        }
+
+.login-form input {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.login-form input:focus {
+    outline: none;
+    border-color: #8969c8;
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+}
+
+.login-form button {
+    width: 100%;
+    padding: 12px;
+    background-color: #9a7fcf;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-form button:hover {
+    background-color: #8969c8;
+}
+
+.form-label {
+    display: block;
+    text-align: left;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+     }
+
+.link_registro {
+    text-decoration: none;
+    color: #8969c8;
+    font-weight: bold;
+}
+
+.link_registro:hover {
+    color:#baa0f0;
+}
+

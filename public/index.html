@@ -2,3 +2,74 @@
 Página principal de entrada al sitio web <<Taimo>>.
 Presentación del sitio + enlaces a login/registro.
 -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/estilo_index.css">
+    <link rel="stylesheet" href="./css/estilo_global.css">
+    <title>Taimo</title>
+    
+</head>
+<body>
+    <header>
+        <div class="container-sm text-center pt-3">
+            <div class="marca-titulo flex-column flex-md-row text-center">
+                <img src="./imgs/Logo-taimo-borde.png" class="logo img-fluid mb-3 mb-md-0" alt="Logo Taimo">
+                <div>
+                    <h1 class="fw-bolder m-0 display-1 display-md-3  display-lg-1">TAIMO</h1>
+                    <h2 class="m-0 fs-5 fs-md-4 fs-lg-2">Tu tiempo, tu ritmo.</h2>
+                </div>
+            </div>
+            <nav class="nav_contenedor d-flex justify-content-center">
+                <div class="links d-flex flex-column flex-md-row gap-4 pt-4">
+                    <a href="./html/login.html" class="link_a text-decoration-none fw-bold px-5 py-2 rounded fs-6 fs-sm-5">Inicio de Sesión</a>
+                    <a href="./html/regist.html" class="link_a text-decoration-none fw-bold px-5 py-2 rounded fs-6 fs-sm-5">Registrarse</a>
+                  
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="Funs">
+            <h3 class="text-center">Funcionalidades</h3>
+            <div class="row text-center mx-5 mb-2 justify-content-center gap-2">
+                <div class="col-sm-4 fun rounded-5 flex-column"> <!-- fun representa "funcionalidades" -->
+
+                    <img src="./imgs/lista-de-verificacion-de-tareas.png" alt="Tareas" class="vectores pt-2">
+                    <p class="pt-4">Organiza Tareas y Evaluaciones</p>    
+                </div>
+                <div class="col-sm-4 fun rounded-5 flex-column">
+                    <img src="./imgs/lista-de-verificacion-de-tareas.png" alt="Tareas" class="vectores pt-2">
+                    <p class="pt-4">otras cositas </p>    
+                </div>
+                <div class="col-sm-4 fun rounded-5 flex-column">
+                    <img src="./imgs/despertador.png" alt="Tareas" class="vectores pt-2">
+                    <p class="pt-4">Temporizador Pomodoro</p>    
+                </div>
+            </div>
+        </section>
+
+        <section class="dirigido container-fluid">
+            <h3 class="text-center py-5">¿A quién va dirigido?</h3>
+            <div class="row text-center mx-5 mb-2 justify-content-center gap-2">
+                <div class="col-sm-4 dir rounded-5 flex-column"> <!-- dir representa "dirigido" -->
+                    <img src="./imgs/lista-de-verificacion-de-tareas.png" alt="Tareas" class="vectores pt-2">
+                    <p class="pt-4">Estudiantes</p>    
+                </div>
+                <div class="col-sm-4 dir rounded-5 flex-column">  
+                    <img src="./imgs/lista-de-verificacion-de-tareas.png" alt="Tareas" class="vectores pt-2">
+                    <p class="pt-4">Profesionales</p>    
+                </div>
+            </div>
+        </section>
+    </main>
+   
+    
+</body>
+</html>

@@ -1,3 +1,123 @@
 /*
 Estilos específicos para index.html (presentación del sitio).
 */
+header {
+  position: relative; 
+  background-color: #ffffff;
+  color: white; 
+  overflow: hidden;
+  height: 700px;
+}
+
+nav a{ 
+  text-decoration: none;
+  color:#ffffff; 
+  transition: transform 0.3s ease;
+}
+
+.nav_contenedor {
+  margin-top: 1rem;
+}
+
+
+.link_a {
+  color: #ffffff;
+  background-color: #4d2e8b;
+  transition: all 0.3s ease;
+}
+
+
+.link_sesion:hover {
+  color: #8969c8;
+  background-color: #f8f9fa;
+  border: 2px solid #8969c8;
+  transform: translateY(-2px);
+}
+
+nav a:hover {
+  transform: translateY(-2px);
+  color: #8969c8;
+  border: 2px solid #8969c8;
+  background-color: #f8f9fa;
+}
+
+header::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(../imgs/layered-waves-haikei.svg);
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-size: cover; 
+  z-index: 0;
+}
+
+header h1,
+header h2,
+header nav {
+  position: relative;
+  z-index: 1; /* asegurarse de que el texto esté encima del svg */
+}
+
+.marca-titulo {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;       
+  justify-content: center;   
+  gap: 0.5rem;
+  padding-top: 01rem;
+}
+
+.logo {
+  max-width: 180px;
+  height: auto;
+  z-index: 2;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .logo {
+    max-width: 80px; 
+  };
+}
+
+
+.fun {
+    aspect-ratio: 1 / 1;
+    background-color: #e5dbf7;; /* Solo para visualización */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 200px;
+}
+
+.col-sm-4.fun {
+  border: 8px solid #ffffff; 
+  box-sizing: border-box; 
+}
+
+.vectores {
+  max-height: 60px;
+}
+
+main p {
+  font-weight: bold;
+}
+
+.dirigido {
+  background-color: #f2eefa;
+}
+
+.dir {
+  aspect-ratio: 1 / 1;
+  background-color: #b9a5df;; /* Solo para visualización */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 200px;
+  border: 8px solid #f2eefa;
+}
