@@ -12,12 +12,18 @@ app.use(cors());
 app.use(express.json());
 
 // Conexión a MongoDB
-mongoose.connect('mongodb://localhost:27017/tus_usuarios', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+mongoose.connect('mongodb+srv://NaJoRB:Hola.1234@cluster0.tycxfqj.mongodb.net/proyecto_final?retryWrites=true&w=majority&appName=Cluster0', {
+  serverSelectionTimeoutMS: 10000, // Timeout de 10 segundos
+  socketTimeoutMS: 45000
 })
-.then(() => console.log('Conectado a MongoDB'))
-.catch((err) => console.error('Error al conectar a MongoDB:', err));
+.then(() => console.log('Conectado a MongoDB Atlas'))
+.catch((err) => {
+  console.error('❌ Error detallado:', {
+    name: err.name,
+    message: err.message,
+    reason: err.reason?.servers // Muestra info de los servidores
+  });
+});
 
 // Ruta para crear un nuevo usuario
 app.post('/usuarios', async (req, res) => {
