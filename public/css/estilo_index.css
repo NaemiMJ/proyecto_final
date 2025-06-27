@@ -23,7 +23,6 @@ nav a{
 .link_a {
   color: #ffffff;
   background-color: #4d2e8b;
-  transition: all 0.3s ease;
 }
 
 
@@ -31,11 +30,9 @@ nav a{
   color: #8969c8;
   background-color: #f8f9fa;
   border: 2px solid #8969c8;
-  transform: translateY(-2px);
 }
 
 nav a:hover {
-  transform: translateY(-2px);
   color: #8969c8;
   border: 2px solid #8969c8;
   background-color: #f8f9fa;
@@ -88,7 +85,7 @@ header nav {
 
 .fun {
     aspect-ratio: 1 / 1;
-    background-color: #e5dbf7;; /* Solo para visualización */
+    background-color: #e5dbf7; /* Solo para visualización */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -114,7 +111,7 @@ main p {
 
 .dir {
   aspect-ratio: 1 / 1;
-  background-color: #b9a5df;; /* Solo para visualización */
+  background-color: #c8b4ec;
   display: flex;
   justify-content: center;
   align-items: center;

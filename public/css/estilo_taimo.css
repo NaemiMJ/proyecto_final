@@ -1,3 +1,11 @@
 /*
 Estilos para la página principal del usuario (taimo.html).
 */
+
+header nav a {
+    color: #a58adb;
+}
+
+header nav a:hover {
+    color: #8969c8;
+}
