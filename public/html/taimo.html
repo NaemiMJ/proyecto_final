@@ -14,18 +14,59 @@ Muestra de tareas y evaluaciones (sin edicion disponible) + pomodoro.
     <title>Taimo | Home</title>
 </head>
 <body>
-  <header>
     <nav class="d-flex justify-content-between align-items-center px-4 py-2 bg-light">
       <div class="d-flex align-items-center gap-2">
         <img src="../imgs/logo_2.png" alt="Logo 2" style="height: 100px;">
         <h1 class="m-0 fw-bolder"><a href="./taimo.html" class="text-decoration-none">TAIMO</a></h1>
       </div>
 
-      <div class="d-flex gap-3">
+      <div class="d-flex gap-5">
         <a href="../html/tareas.html" class="text-decoration-none  fw-bold">Tareas</a>
         <a href="../html/eval.html" class="text-decoration-none fw-bold">Evaluaciones</a>
       </div>
+
+      <div class="icons d-flex gap-4 pe-4"">
+        <img src="../imgs/ajustes.svg" class="icon">
+        <img src="../imgs/usuario.svg" class="icon">       
+      </div>
     </nav>
-  </header>
+
+     <main class="container">
+    <section class="tareas">
+      <div class="tareas-header">
+        <h2>Tareas Pendientes <span>📋</span></h2>
+        <label for="filtro">mostrar por:</label>
+        <select id="filtro">
+          <option value="prioridad">prioridad</option>
+          <option value="prioridad">fecha limite</option> 
+        </select>
+      </div>
+
+      <div class="tarea">
+        <!-- Aquí irían las tareas dinámicas -->
+      </div>
+    </section>
+
+    <aside class="sidebar">
+      <div class="evaluaciones">
+        <h3>📅 Evaluaciones próximas</h3>
+        <ul>
+          <!-- Evaluaciones -->
+        </ul>
+      </div>
+
+      <div class="pomodoro">
+        <h3>Método Pomodoro</h3>
+        <div class="timer">
+          <span class="emoji">🍅</span>
+          <div class="clock">00:00</div>
+          <div class="controls">
+            <button>▶️</button>
+            <button>🔁</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
 </body>
 </html>
