@@ -31,15 +31,19 @@ Muestra de tareas y evaluaciones (sin edicion disponible) + pomodoro.
       </div>
     </nav>
 
-     <main class="container">
+     <main class="container py-5">
     <section class="tareas">
-      <div class="tareas-header">
-        <h2>Tareas Pendientes <span>📋</span></h2>
-        <label for="filtro">mostrar por:</label>
-        <select id="filtro">
-          <option value="prioridad">prioridad</option>
-          <option value="prioridad">fecha limite</option> 
-        </select>
+      <div class="tareas-header border-bottom border-3 pb-3">
+        <h3>Tareas Pendientes <a href="./tareas.html" class="text-decoration-none">📋</a></h3>
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            Mostar por:
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="#">Prioridad</a></li>
+            <li><a class="dropdown-item" href="#">Fecha limite </a></li>
+          </ul>
+        </div>
       </div>
 
       <div class="tarea">
@@ -47,16 +51,16 @@ Muestra de tareas y evaluaciones (sin edicion disponible) + pomodoro.
       </div>
     </section>
 
-    <aside class="sidebar">
+    <aside class="costado">
       <div class="evaluaciones">
-        <h3>📅 Evaluaciones próximas</h3>
+        <p class="text-center"><a href="./eval.html" class="text-decoration-none">📅</a> Evaluaciones próximas<p>
         <ul>
           <!-- Evaluaciones -->
         </ul>
       </div>
 
       <div class="pomodoro">
-        <h3>Método Pomodoro</h3>
+        <p class="text-center">Método Pomodoro</p>
         <div class="timer">
           <span class="emoji">🍅</span>
           <div class="clock">00:00</div>
