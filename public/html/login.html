@@ -22,17 +22,17 @@ Incluir campos como correo/usuario y contraseña.
         <form class="login-form">
             <div class="input-group">
                 <label class="form-label">Nombre de Usuario / Correo</label>
-                <input type="text" placeholder="Ingrese usuario o correo">
+                <input type="text" id="identificador" placeholder="Ingrese usuario o correo" required>
             </div>
             <div class="input-group">
                 <label class="form-label">Contraseña</label>
-                <input type="password" placeholder="Ingrese su contraseña">
+                <input type="password" id="password" placeholder="Ingrese su contraseña" required>
             </div>
             <button type="submit">Ingresar</button>
         </form>
         <p class="registro-bajo pt-5">¿No tienes cuenta? <a class="link_registro"  href="./regist.html">Registrarse</a></p>
     </main>
-    <script src="../js/script.js"></script>
+    <script src="../js/script_login.js"></script>
 </body>
 
 </html>

@@ -1,23 +1,24 @@
-
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const { Usuario } = require('./models/ModeloUsuario'); 
+const { Usuario } = require('./models/ModeloUsuario');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-
-app.use(cors());
+// Middleware global
+app.use(cors({
+  origin: ['http://localhost:5500', 'http://127.0.0.1:5500'], // <-- ACEPTA AMBOS
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Conexión a MongoDB con manejo de errores
+// Conexión a MongoDB
 const connectDB = async () => {
   try {
     await mongoose.connect('mongodb+srv://NaJoRB:Hola.1234@cluster0.tycxfqj.mongodb.net/proyecto_final?retryWrites=true&w=majority&appName=Cluster0', {
       useNewUrlParser: true,
-      useUnifiedTopology: true,
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 45000
     });
@@ -30,6 +31,7 @@ const connectDB = async () => {
 
 connectDB();
 
+// Middleware para verificar conexión activa
 app.use((req, res, next) => {
   if (mongoose.connection.readyState !== 1) {
     return res.status(503).json({ mensaje: 'Servicio no disponible - Base de datos desconectada' });
@@ -37,33 +39,51 @@ app.use((req, res, next) => {
   next();
 });
 
-// Ruta para login
-app.post('/login', async (req, res) => {
+// ==========================
+// Rutas
+// ==========================
+
+// Login
+app.post('/api/login', async (req, res) => {
+  const { identificador, password } = req.body;
+
+  if (!identificador || !password) {
+    return res.status(400).json({ mensaje: 'Faltan datos de login' });
+  }
+
   try {
-    const { correo, contrasena } = req.body;
-    const usuario = await Usuario.findOne({ correo, contrasena });
-    
+    const usuario = await Usuario.findOne({
+      $or: [
+        { correo: identificador },
+        { nom_usuario: identificador }
+      ]
+    });
+
     if (!usuario) {
-      return res.status(401).json({ mensaje: 'Credenciales incorrectas' });
+      return res.status(404).json({ mensaje: 'Usuario no encontrado' });
     }
-    
+
+    if (usuario.contrasena !== password) {
+      return res.status(401).json({ mensaje: 'Contraseña incorrecta' });
+    }
+
     res.status(200).json({ mensaje: 'Login exitoso', usuario });
   } catch (error) {
-    res.status(500).json({ mensaje: 'Error en el login', error });
+    res.status(500).json({ mensaje: 'Error del servidor', error });
   }
 });
 
-// Ruta para registro
+
+// Registro
 app.post('/registro', async (req, res) => {
   try {
     const { nom_usuario, correo } = req.body;
-    
-    // Verificar si el usuario ya existen
+
     const existeUsuario = await Usuario.findOne({ $or: [{ nom_usuario }, { correo }] });
     if (existeUsuario) {
       return res.status(400).json({ mensaje: 'Usuario o correo ya registrado' });
     }
-    
+
     const nuevoUsuario = new Usuario(req.body);
     await nuevoUsuario.save();
     res.status(201).json({ mensaje: 'Usuario creado correctamente', usuario: nuevoUsuario });
@@ -72,12 +92,12 @@ app.post('/registro', async (req, res) => {
   }
 });
 
-// Rutas para tareas
+// Tareas
 app.post('/usuarios/:id/tareas', async (req, res) => {
   try {
     const usuario = await Usuario.findById(req.params.id);
     if (!usuario) return res.status(404).json({ mensaje: 'Usuario no encontrado' });
-    
+
     usuario.tareas.push(req.body);
     await usuario.save();
     res.status(201).json(usuario.tareas);
@@ -86,12 +106,23 @@ app.post('/usuarios/:id/tareas', async (req, res) => {
   }
 });
 
-// Rutas para evaluaciones
+app.get('/usuarios/:id/tareas', async (req, res) => {
+  try {
+    const usuario = await Usuario.findById(req.params.id);
+    if (!usuario) return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+
+    res.status(200).json(usuario.tareas);
+  } catch (error) {
+    res.status(500).json({ mensaje: 'Error al obtener tareas', error });
+  }
+});
+
+// Evaluaciones
 app.post('/usuarios/:id/evaluaciones', async (req, res) => {
   try {
     const usuario = await Usuario.findById(req.params.id);
     if (!usuario) return res.status(404).json({ mensaje: 'Usuario no encontrado' });
-    
+
     usuario.evaluaciones.push(req.body);
     await usuario.save();
     res.status(201).json(usuario.evaluaciones);
@@ -100,30 +131,20 @@ app.post('/usuarios/:id/evaluaciones', async (req, res) => {
   }
 });
 
-// Obtener tareas de un usuario
-app.get('/usuarios/:id/tareas', async (req, res) => {
-  try {
-    const usuario = await Usuario.findById(req.params.id);
-    if (!usuario) return res.status(404).json({ mensaje: 'Usuario no encontrado' });
-    
-    res.status(200).json(usuario.tareas);
-  } catch (error) {
-    res.status(500).json({ mensaje: 'Error al obtener tareas', error });
-  }
-});
-
-// Obtener evaluaciones de un usuario
 app.get('/usuarios/:id/evaluaciones', async (req, res) => {
   try {
     const usuario = await Usuario.findById(req.params.id);
     if (!usuario) return res.status(404).json({ mensaje: 'Usuario no encontrado' });
-    
+
     res.status(200).json(usuario.evaluaciones);
   } catch (error) {
     res.status(500).json({ mensaje: 'Error al obtener evaluaciones', error });
   }
 });
 
+// ==========================
+// Servidor
+// ==========================
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });

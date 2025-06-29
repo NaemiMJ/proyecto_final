@@ -21,14 +21,18 @@ Incluye campos como nombre, correo, contraseña, confirmar contraseña.
         <h1 class="logo">
             <img src="../imgs/logo_taimo.png" class="img-fluid" style="height: 70px;" alt="Logo"> Taimo
         </h1>
-        <form class="login-form">
+            <form class="login-form">
             <div class="input-group">
                 <label class="form-label">Nombre de Usuario</label>
-                <input type="text" placeholder="Ingrese un nombre de usuario" required>
+                <input type="text" id="username" placeholder="Ingrese un nombre de usuario" required>
             </div>
             <div class="input-group">
                 <label class="form-label">Nombre y Apellido</label>
-                <input type="text" placeholder="Ingrese su nombre" required>
+                <input type="text" id="nombre" placeholder="Ingrese su nombre" required>
+            </div>
+            <div class="input-group">
+                <label class="form-label">Correo</label>
+                <input type="email" id="correo" placeholder="Ingrese su correo" required>
             </div>
             <div class="input-group">
                 <label class="form-label">Contraseña</label>
@@ -41,7 +45,7 @@ Incluye campos como nombre, correo, contraseña, confirmar contraseña.
             <button type="submit">Registrarse</button>
         </form>
     </main>
-
+    <script src="../js/script_regist.js"></script>
 </body>
 
 </html>
