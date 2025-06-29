@@ -25,10 +25,22 @@ Muestra de tareas y evaluaciones (sin edicion disponible) + pomodoro.
         <a href="../html/eval.html" class="text-decoration-none fw-bold">Evaluaciones</a>
       </div>
 
-      <div class="icons d-flex gap-4 pe-4"">
-        <img src="../imgs/ajustes.svg" class="icon">
-        <img src="../imgs/usuario.svg" class="icon">       
-      </div>
+      <div class="icons d-flex gap-4 pe-4">
+  <div class="dropdown">
+    <img
+      src="../imgs/usuario.svg"
+      class="icon dropdown-toggle"
+      id="userDropdown"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+      style="cursor: pointer;"
+    >
+
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+      <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">Cerrar sesión</a></li>
+    </ul>
+  </div>
+</div>
     </nav>
 
      <main class="container py-5">
@@ -60,17 +72,19 @@ Muestra de tareas y evaluaciones (sin edicion disponible) + pomodoro.
       </div>
 
       <div class="pomodoro">
-        <p class="text-center">Método Pomodoro</p>
+        <p class="text-center fw-bold">Método Pomodoro</p>
         <div class="timer">
-          <span class="emoji">🍅</span>
-          <div class="clock">00:00</div>
-          <div class="controls">
-            <button>▶️</button>
-            <button>🔁</button>
+          <span class="emoji fs-1">🍅</span>
+          <div class="clock" id="clock">25:00</div>
+          <div class="controles">
+            <button id="startPauseBtn" class="btn btn-success">▶️</button>
+            <button id="resetBtn" class="btn btn-danger">🔁</button>
           </div>
         </div>
       </div>
     </aside>
   </main>
+
+   <script src="../js/script_eval.js"></script>
 </body>
 </html>
