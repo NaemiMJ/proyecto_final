@@ -107,7 +107,23 @@ document.getElementById("formNuevaTarea").addEventListener("submit", async (e) =
     console.error(error);
   }
 });
-
+document.querySelectorAll('.eliminar-tarea').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const tareaId = btn.getAttribute('data-id');
+      if (confirm('¿Estás seguro de que deseas eliminar esta tarea?')) {
+        try {
+          const response = await fetch(`http://localhost:3000/usuarios/${usuarioId}/tareas/${tareaId}`, {
+            method: 'DELETE'
+          });
+          if (!response.ok) throw new Error('Error al eliminar tarea');
+          location.reload();
+        } catch (error) {
+          console.error('Error al eliminar tarea:', error);
+          alert('No se pudo eliminar la tarea.');
+        }
+      }
+    });
+  });
 // =======================
 // Ordenar por prioridad
 // =======================

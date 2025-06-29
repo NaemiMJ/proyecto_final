@@ -19,16 +19,39 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     evalContainer.innerHTML = ""; // Limpia antes de pintar
     evaluaciones.forEach(evaluacion => {
-      const div = document.createElement("div");
-      div.className = "card my-3 p-3 shadow-sm";
+  const div = document.createElement("div");
+  div.className = "card my-3 p-3 shadow-sm";
 
-      div.innerHTML = `
-        <h5>${evaluacion.materia}</h5>
-        <p class="mb-1"><strong>Fecha:</strong> ${new Date(evaluacion.fecha_ev).toLocaleDateString()}</p>
-        <p><strong>Recordatorio:</strong> ${evaluacion.recordatorio ? "Sí" : "No"}</p>
-      `;
-      evalContainer.appendChild(div);
-    });
+  div.innerHTML = `
+    <h5>${evaluacion.materia}</h5>
+    <p class="mb-1"><strong>Fecha:</strong> ${new Date(evaluacion.fecha_ev).toLocaleDateString()}</p>
+    <p><strong>Recordatorio:</strong> ${evaluacion.recordatorio ? "Sí" : "No"}</p>
+    <button class="btn btn-danger btn-sm mt-2 eliminar-btn" data-id="${evaluacion._id}">Eliminar</button>
+  `;
+
+  evalContainer.appendChild(div);
+});
+evalContainer.addEventListener("click", async (e) => {
+  if (e.target.classList.contains("eliminar-btn")) {
+    const id = e.target.getAttribute("data-id");
+
+    if (confirm("¿Estás seguro de que deseas eliminar esta evaluación?")) {
+      try {
+        const response = await fetch(`http://localhost:3000/usuarios/${userId}/evaluaciones/${id}`, {
+          method: "DELETE",
+        });
+
+        if (!response.ok) throw new Error("No se pudo eliminar");
+
+        // Recargar la página o eliminar el nodo
+        location.reload(); // o puedes usar e.target.parentElement.remove();
+      } catch (error) {
+        alert("Error al eliminar evaluación");
+        console.error(error);
+      }
+    }
+  }
+});
 
   } catch (error) {
     console.error("Error al cargar evaluaciones:", error);

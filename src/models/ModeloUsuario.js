@@ -16,28 +16,28 @@ const usuarioSchema = new mongoose.Schema({
     contrasena: { type: String, required: true, minlength: 6 },
 
   tareas: [
-    {
-        titulo: String,
-        descripcion: String,
-        prioridad: String,
-        fecha_limite: Date,
-        subtareas: [
-            {
-            nombre_sub: String,
-            finalizada_sub: Boolean
-            }
-        ],
-        finalizada: Boolean
-    }
-  ],
+  new mongoose.Schema({
+    titulo: String,
+    descripcion: String,
+    prioridad: String,
+    fecha_limite: Date,
+    subtareas: [
+      {
+        nombre_sub: String,
+        finalizada_sub: Boolean
+      }
+    ],
+    finalizada: Boolean
+  }, { _id: true })
+],
 
-  evaluaciones:[
-    {
-      materia: String,
-      fecha_ev: Date,
-      recordatorio: Boolean,
-    }
-  ]
+  evaluaciones: [
+  new mongoose.Schema({
+    materia: String,
+    fecha_ev: Date,
+    recordatorio: Boolean
+  }, { _id: true }) // <= habilita _id en objetos embebidos
+]
 });
 
 const Usuario = mongoose.model('Usuario', usuarioSchema);

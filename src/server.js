@@ -118,7 +118,25 @@ app.get('/usuarios/:id/tareas', async (req, res) => {
     res.status(500).json({ mensaje: 'Error al obtener tareas', error });
   }
 });
+// Eliminar tarea
+app.delete('/usuarios/:userId/tareas/:tareaId', async (req, res) => {
+  const { userId, tareaId } = req.params;
 
+  try {
+    const usuario = await Usuario.findById(userId);
+    if (!usuario) return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+
+    usuario.tareas = usuario.tareas.filter(
+      tarea => tarea._id.toString() !== tareaId
+    );
+
+    await usuario.save();
+    res.status(200).json({ mensaje: 'Tarea eliminada correctamente' });
+  } catch (error) {
+    console.error('❌ Error al eliminar tarea:', error);
+    res.status(500).json({ mensaje: 'Error al eliminar tarea', error });
+  }
+});
 // Evaluaciones
 app.post('/usuarios/:id/evaluaciones', async (req, res) => {
   try {
@@ -143,7 +161,29 @@ app.get('/usuarios/:id/evaluaciones', async (req, res) => {
     res.status(500).json({ mensaje: 'Error al obtener evaluaciones', error });
   }
 });
+// Eliminar evaluación
+app.delete('/usuarios/:userId/evaluaciones/:evalId', async (req, res) => {
+  const { userId, evalId } = req.params;
 
+  try {
+    const usuario = await Usuario.findById(userId);
+    if (!usuario) {
+      return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+    }
+
+    // Filtrar las evaluaciones excluyendo la que se desea eliminar
+    usuario.evaluaciones = usuario.evaluaciones.filter(
+      (ev) => ev._id.toString() !== evalId
+    );
+
+    await usuario.save();
+
+    res.status(200).json({ mensaje: 'Evaluación eliminada correctamente' });
+  } catch (error) {
+    console.error('❌ Error al eliminar evaluación:', error);
+    res.status(500).json({ mensaje: 'Error al eliminar evaluación', error });
+  }
+});
 // ==========================
 // Servidor
 // ==========================
