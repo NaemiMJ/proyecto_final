@@ -24,10 +24,22 @@ Página para visualizar y gestionar el apartado de evaluaciones
         <a href="../html/eval.html" class="text-decoration-none fw-bold">Evaluaciones</a>
       </div>
 
-      <div class="icons d-flex gap-4 pe-4"">
-        <img src="../imgs/ajustes.svg" class="icon">
-        <img src="../imgs/usuario.svg" class="icon">       
-      </div>
+      <div class="icons d-flex gap-4 pe-4">
+  <div class="dropdown">
+    <img
+      src="../imgs/usuario.svg"
+      class="icon dropdown-toggle"
+      id="userDropdown"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+      style="cursor: pointer;"
+    >
+
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+      <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">Cerrar sesión</a></li>
+    </ul>
+  </div>
+</div>
     </nav>
        <main class="container py-5">
         <section class="tareas">
