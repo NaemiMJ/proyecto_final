@@ -20,9 +20,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const data = await response.json();
 
       if (response.ok) {
-        alert(data.mensaje);
-        window.location.href = "../html/taimo.html"; // Redirige según tu proyecto
-      } else {
+        localStorage.setItem("usuario", JSON.stringify(data.usuario)); // 🔐 Guarda usuario
+        window.location.href = "../html/taimo.html"; // Redirige a la página principal
+      }else {
         alert(`Error: ${data.mensaje}`);
       }
     } catch (error) {

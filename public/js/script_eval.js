@@ -1,67 +1,75 @@
+// Verificar sesión
+const usuario = JSON.parse(localStorage.getItem("usuario"));
+if (!usuario) {
+  window.location.href = "./login.html"; // Redirige si no hay sesión
+}
+const userId = usuario._id;
 
-// script_eval.js
-document.addEventListener('DOMContentLoaded', async () => {
-  const usuarioId = localStorage.getItem('usuarioId');
-  if (!usuarioId) {
-    window.location.href = 'login.html';
-    return;
-  }
-  
-  // Cargar evaluaciones
+// =======================
+// Mostrar evaluaciones
+// =======================
+document.addEventListener("DOMContentLoaded", async () => {
+  const evalContainer = document.querySelector(".eval");
+
   try {
-    const response = await fetch(`http://localhost:3000/usuarios/${usuarioId}/evaluaciones`);
-    if (!response.ok) throw new Error('Error al cargar evaluaciones');
-    
+    const response = await fetch(`http://localhost:3000/usuarios/${userId}/evaluaciones`);
     const evaluaciones = await response.json();
-    renderEvaluaciones(evaluaciones);
+
+    if (!response.ok) throw new Error("No se pudieron obtener evaluaciones");
+
+    evalContainer.innerHTML = ""; // Limpia antes de pintar
+    evaluaciones.forEach(evaluacion => {
+      const div = document.createElement("div");
+      div.className = "card my-3 p-3 shadow-sm";
+
+      div.innerHTML = `
+        <h5>${evaluacion.materia}</h5>
+        <p class="mb-1"><strong>Fecha:</strong> ${new Date(evaluacion.fecha_ev).toLocaleDateString()}</p>
+        <p><strong>Recordatorio:</strong> ${evaluacion.recordatorio ? "Sí" : "No"}</p>
+      `;
+      evalContainer.appendChild(div);
+    });
+
   } catch (error) {
-    console.error('Error:', error);
+    console.error("Error al cargar evaluaciones:", error);
+    evalContainer.innerHTML = `<p class="text-danger">No se pudieron cargar las evaluaciones.</p>`;
   }
-  
-  // Formulario para agregar evaluación
-  document.getElementById('formNuevaEval').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const nuevaEval = {
-      materia: document.getElementById('titulo').value,
-      fecha_ev: document.getElementById('fechaLimite').value,
-      recordatorio: false
-    };
-    
-    try {
-      const response = await fetch(`http://localhost:3000/usuarios/${usuarioId}/evaluaciones`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(nuevaEval)
-      });
-      
-      if (!response.ok) throw new Error('Error al guardar evaluación');
-      
-      // Recargar evaluaciones
-      location.reload();
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  });
 });
 
-function renderEvaluaciones(evaluaciones) {
-  const contenedor = document.querySelector('.eval');
-  contenedor.innerHTML = '';
-  
-  evaluaciones.forEach(eval => {
-    const evalElement = document.createElement('div');
-    evalElement.className = 'card mb-3';
-    evalElement.innerHTML = `
-      <div class="card-body">
-        <h5 class="card-title">${eval.materia}</h5>
-        <p class="card-text"><small class="text-muted">Fecha: ${new Date(eval.fecha_ev).toLocaleDateString()}</small></p>
-        <div class="form-check form-switch">
-          <input class="form-check-input" type="checkbox" id="recordatorio-${eval._id}" ${eval.recordatorio ? 'checked' : ''}>
-          <label class="form-check-label" for="recordatorio-${eval._id}">Recordatorio</label>
-        </div>
-      </div>
-    `;
-    contenedor.appendChild(evalElement);
-  });
-}
+// =======================
+// Agregar evaluación
+// =======================
+document.getElementById("formNuevaEval").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const materia = document.getElementById("titulo").value.trim();
+  const fecha_ev = document.getElementById("fechaLimite").value;
+  const recordatorio = document.getElementById("recordatorio").checked;
+
+  try {
+    const response = await fetch(`http://localhost:3000/usuarios/${userId}/evaluaciones`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ materia, fecha_ev, recordatorio })
+    });
+
+    if (!response.ok) throw new Error("No se pudo guardar la evaluación");
+
+    // Recargar la lista
+    document.getElementById("formNuevaEval").reset();
+    bootstrap.Modal.getInstance(document.getElementById("agregarEvalModal")).hide();
+    location.reload();
+
+  } catch (error) {
+    alert("Error al guardar evaluación");
+    console.error(error);
+  }
+});
+
+// =======================
+// Logout
+// =======================
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  localStorage.removeItem("usuario");
+  window.location.href = "./login.html";
+});
