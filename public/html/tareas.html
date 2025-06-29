@@ -56,13 +56,66 @@ Página para visualizar y gestionar el apartado de tareas
         </div>
       </div>
       <div class="text-end mt-4">
-        <button class="btn btn-outline-dark d-flex align-items-center gap-2 mx-auto">
-          agregar <span class="fs-5">＋</span>
-        </button>
+          <button class="btn btn-outline-dark d-flex align-items-center gap-2 mx-auto"
+                    data-bs-toggle="modal" data-bs-target="#agregarTareaModal">
+              agregar <span class="fs-5">＋</span>
+            </button>
       </div>
       <div class="tarea">
       </div>
     </main>
     </section>
-  </main>
+    <div class="modal fade" id="agregarTareaModal" tabindex="-1" aria-labelledby="agregarTareaLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="agregarTareaLabel">Nueva Tarea</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="formNuevaTarea">
+          <div class="mb-3">
+            <label for="titulo" class="form-label">Título *</label>
+            <input type="text" class="form-control" id="titulo" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="fechaLimite" class="form-label">Fecha límite *</label>
+            <input type="date" class="form-control" id="fechaLimite" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="prioridad" class="form-label">Prioridad *</label>
+            <select class="form-select" id="prioridad" required>
+              <option value="">Seleccionar</option>
+              <option value="alta">Alta</option>
+              <option value="media">Media</option>
+              <option value="baja">Baja</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="descripcion" class="form-label">Descripción</label>
+            <textarea class="form-control" id="descripcion" rows="2" placeholder="(opcional)"></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="subtareas" class="form-label">Subtareas</label>
+            <input type="text" class="form-control" id="subtareas" placeholder="Separadas por coma (ej: limpiar, enviar correo)">
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary" form="formNuevaTarea">Agregar</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+   <script src="../js/script_tareas.js"></script>
 </body>
+</html>

@@ -20,7 +20,7 @@ nav a:hover {
   gap: 2rem;
 }
 
-.tareas {
+.tareas, .evaluaciones_{
   flex: 2;
   border: 2px solid #000;
   border-radius: 10px;
