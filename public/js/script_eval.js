@@ -121,5 +121,5 @@ document.getElementById("formNuevaEval").addEventListener("submit", async (e) =>
 // =======================
 document.getElementById("logoutBtn").addEventListener("click", () => {
   localStorage.removeItem("usuario");
-  window.location.href = "../index.html";
+  window.location.href = "../../index.html";
 });

@@ -242,5 +242,5 @@ document.getElementById("ordenFecha").addEventListener("click", () => {
 // =======================
 document.getElementById("logoutBtn").addEventListener("click", () => {
   localStorage.removeItem("usuario");
-  window.location.href = "../index.html";
+  window.location.href = "../../index.html";
 });
