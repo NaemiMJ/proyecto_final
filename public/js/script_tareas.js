@@ -15,6 +15,13 @@ if (!usuario) {
 }
 const userId = usuario._id;
 
+document.addEventListener("DOMContentLoaded", () => {
+  const nombreElemento = document.getElementById("nombreUsuario");
+  if (nombreElemento && usuario?.nombre) {
+    nombreElemento.textContent = capitalizar(usuario.nombre);
+  }
+});
+
 let tareasOriginales = [];
 
 // =======================

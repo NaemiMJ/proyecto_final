@@ -26,21 +26,22 @@ Muestra de tareas y evaluaciones (sin edicion disponible) + pomodoro.
       </div>
 
       <div class="icons d-flex gap-4 pe-4">
-  <div class="dropdown">
-    <img
-      src="../imgs/usuario.svg"
-      class="icon dropdown-toggle"
-      id="userDropdown"
-      data-bs-toggle="dropdown"
-      aria-expanded="false"
-      style="cursor: pointer;"
-    >
+        <span id="nombreUsuario" class="fw-bold text-secondary"></span>
+        <div class="dropdown">
+          <img
+            src="../imgs/usuario.svg"
+            class="icon dropdown-toggle"
+            id="userDropdown"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            style="cursor: pointer;"
+          >
 
-    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-      <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">Cerrar sesión</a></li>
-    </ul>
-  </div>
-</div>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">Cerrar sesión</a></li>
+          </ul>
+        </div>
+      </div>
     </nav>
 
      <main class="container py-5">

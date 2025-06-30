@@ -1,14 +1,23 @@
 // Verificar sesión
+// =======================
 const usuario = JSON.parse(localStorage.getItem("usuario"));
 if (!usuario) {
-  window.location.href = "./login.html"; // Redirige si no hay sesión
+  window.location.href = "./login.html";
 }
 const userId = usuario._id;
 
+function capitalizar(texto) {
+  if (!texto) return "";
+  return texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase();
+}
 // =======================
 // Mostrar evaluaciones
 // =======================
 document.addEventListener("DOMContentLoaded", async () => {
+   const nombreElemento = document.getElementById("nombreUsuario");
+  if (nombreElemento && usuario?.nombre) {
+    nombreElemento.textContent = capitalizar(usuario.nombre);
+  }
   const evalContainer = document.querySelector(".eval");
 
   try {

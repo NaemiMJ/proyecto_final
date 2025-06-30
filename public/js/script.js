@@ -66,6 +66,13 @@ const usuario = JSON.parse(localStorage.getItem("usuario"));
 if (!usuario) window.location.href = "./login.html";
 const userId = usuario._id;
 
+document.addEventListener("DOMContentLoaded", () => {
+  const nombreElemento = document.getElementById("nombreUsuario");
+  if (nombreElemento && usuario?.nombre) {
+    nombreElemento.textContent = capitalizar(usuario.nombre);
+  }
+});
+
 let tareasOriginales = [];
 let evaluacionesOriginales = [];
 
