@@ -62,3 +62,11 @@ proyecto_final/
      cd src
      node server.js
      ```
+4. **Visualizar la conexión a mongo**
+   >Considerar instalar en VScode la extensión `MongoDB for VS Code` 
+   -Agregar nueva conexión `Advanced Connection Settings`, y reemplazar el URL: 
+   ```bash 
+   'mongodb+srv://NaJoRB:Hola.1234@cluster0.tycxfqj.mongodb.net/proyecto_final?retryWrites=true&w=majority&appName=Cluster0'
+   ```
+
+   Integrantes: Montserrat Jara, Martín Escobar y Johans Rivera.
