@@ -1,11 +1,13 @@
-
+// =======================
+// Autenticación del usuario
+// =======================
 const usuario = JSON.parse(localStorage.getItem("usuario"));
 if (!usuario) {
   window.location.href = "./login.html";
 }
 const userId = usuario._id;
 
-let tareasOriginales = []; 
+let tareasOriginales = [];
 
 // =======================
 // Cargar tareas al iniciar
@@ -19,12 +21,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!response.ok) throw new Error("Error al obtener tareas");
 
-    tareasOriginales = tareas; 
-
+    tareasOriginales = tareas;
     mostrarTareas(tareasOriginales);
 
   } catch (error) {
-    console.error("Error al cargar tareas:", error);
+    console.error("❌ Error al cargar tareas:", error);
     tareaContainer.innerHTML = `<p class="text-danger">No se pudieron cargar las tareas.</p>`;
   }
 });
@@ -57,8 +58,45 @@ function mostrarTareas(lista) {
       html += `<div><strong>Subtareas:</strong><ul>${listaSub}</ul></div>`;
     }
 
+    html += `
+      <div class="text-end mt-2">
+        <button class="btn btn-sm btn-danger eliminar-tarea" data-id="${tarea._id}">
+          🗑 Eliminar
+        </button>
+      </div>
+    `;
+
     card.innerHTML = html;
     contenedor.appendChild(card);
+  });
+
+  // Asignar eventos de eliminar
+  document.querySelectorAll('.eliminar-tarea').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const tareaId = btn.getAttribute('data-id');
+      console.log(`🗑 Intentando eliminar tarea ID: ${tareaId} para usuario: ${userId}`);
+
+      if (confirm('¿Estás seguro de que deseas eliminar esta tarea?')) {
+        try {
+          const response = await fetch(`http://localhost:3000/usuarios/${userId}/tareas/${tareaId}`, {
+            method: 'DELETE'
+          });
+
+          if (!response.ok) {
+            const errorJson = await response.json();
+            console.log("⚠️ Error desde backend:", errorJson);
+            console.log("Status:", response.status);
+            throw new Error('Error al eliminar tarea');
+          }
+
+          location.reload();
+
+        } catch (error) {
+          console.error('❌ Error al eliminar tarea:', error);
+          alert('No se pudo eliminar la tarea.');
+        }
+      }
+    });
   });
 }
 
@@ -100,30 +138,14 @@ document.getElementById("formNuevaTarea").addEventListener("submit", async (e) =
 
     document.getElementById("formNuevaTarea").reset();
     bootstrap.Modal.getInstance(document.getElementById("agregarTareaModal")).hide();
-    location.reload(); 
+    location.reload();
 
   } catch (error) {
     alert("Error al guardar la tarea");
     console.error(error);
   }
 });
-document.querySelectorAll('.eliminar-tarea').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const tareaId = btn.getAttribute('data-id');
-      if (confirm('¿Estás seguro de que deseas eliminar esta tarea?')) {
-        try {
-          const response = await fetch(`http://localhost:3000/usuarios/${usuarioId}/tareas/${tareaId}`, {
-            method: 'DELETE'
-          });
-          if (!response.ok) throw new Error('Error al eliminar tarea');
-          location.reload();
-        } catch (error) {
-          console.error('Error al eliminar tarea:', error);
-          alert('No se pudo eliminar la tarea.');
-        }
-      }
-    });
-  });
+
 // =======================
 // Ordenar por prioridad
 // =======================
@@ -139,18 +161,22 @@ function ordenarPorFecha(tareas) {
   return [...tareas].sort((a, b) => new Date(a.fecha_limite) - new Date(b.fecha_limite));
 }
 
-
+// =======================
+// Eventos para botones del dropdown
+// =======================
 document.getElementById("ordenPrioridad").addEventListener("click", () => {
-  const ordenadas = ordenarPorPrioridad(tareasOriginales);
-  mostrarTareas(ordenadas);
+  const tareasOrdenadas = ordenarPorPrioridad(tareasOriginales);
+  mostrarTareas(tareasOrdenadas);
 });
 
 document.getElementById("ordenFecha").addEventListener("click", () => {
-  const ordenadas = ordenarPorFecha(tareasOriginales);
-  mostrarTareas(ordenadas);
+  const tareasOrdenadas = ordenarPorFecha(tareasOriginales);
+  mostrarTareas(tareasOrdenadas);
 });
 
-
+// =======================
+// Logout
+// =======================
 document.getElementById("logoutBtn").addEventListener("click", () => {
   localStorage.removeItem("usuario");
   window.location.href = "./login.html";

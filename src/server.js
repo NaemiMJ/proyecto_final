@@ -6,17 +6,19 @@ const { Usuario } = require('./models/ModeloUsuario');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// ==========================
 // Middleware global
+// ==========================
 app.use(cors({
-  origin: (origin, callback) => {
-    callback(null, true); // acepta cualquier origen
-  },
+  origin: (origin, callback) => callback(null, true),
   credentials: true
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// ==========================
 // Conexión a MongoDB
+// ==========================
 const connectDB = async () => {
   try {
     await mongoose.connect('mongodb+srv://NaJoRB:Hola.1234@cluster0.tycxfqj.mongodb.net/proyecto_final?retryWrites=true&w=majority&appName=Cluster0', {
@@ -45,7 +47,7 @@ app.use((req, res, next) => {
 // Rutas
 // ==========================
 
-// Login
+// --- LOGIN ---
 app.post('/api/login', async (req, res) => {
   const { identificador, password } = req.body;
 
@@ -55,10 +57,7 @@ app.post('/api/login', async (req, res) => {
 
   try {
     const usuario = await Usuario.findOne({
-      $or: [
-        { correo: identificador },
-        { nom_usuario: identificador }
-      ]
+      $or: [{ correo: identificador }, { nom_usuario: identificador }]
     });
 
     if (!usuario) {
@@ -75,26 +74,28 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-
-// Registro
+// --- REGISTRO ---
 app.post('/registro', async (req, res) => {
   try {
     const { nom_usuario, correo } = req.body;
-
     const existeUsuario = await Usuario.findOne({ $or: [{ nom_usuario }, { correo }] });
+
     if (existeUsuario) {
       return res.status(400).json({ mensaje: 'Usuario o correo ya registrado' });
     }
 
     const nuevoUsuario = new Usuario(req.body);
     await nuevoUsuario.save();
+
     res.status(201).json({ mensaje: 'Usuario creado correctamente', usuario: nuevoUsuario });
   } catch (error) {
     res.status(500).json({ mensaje: 'Error al registrar usuario', error });
   }
 });
 
-// Tareas
+// --- TAREAS ---
+
+// Crear nueva tarea
 app.post('/usuarios/:id/tareas', async (req, res) => {
   try {
     const usuario = await Usuario.findById(req.params.id);
@@ -102,42 +103,67 @@ app.post('/usuarios/:id/tareas', async (req, res) => {
 
     usuario.tareas.push(req.body);
     await usuario.save();
+
     res.status(201).json(usuario.tareas);
   } catch (error) {
     res.status(500).json({ mensaje: 'Error al agregar tarea', error });
   }
 });
 
-app.get('/usuarios/:id/tareas', async (req, res) => {
-  try {
-    const usuario = await Usuario.findById(req.params.id);
-    if (!usuario) return res.status(404).json({ mensaje: 'Usuario no encontrado' });
-
-    res.status(200).json(usuario.tareas);
-  } catch (error) {
-    res.status(500).json({ mensaje: 'Error al obtener tareas', error });
-  }
-});
-// Eliminar tarea
-app.delete('/usuarios/:userId/tareas/:tareaId', async (req, res) => {
-  const { userId, tareaId } = req.params;
+// Obtener todas las tareas de un usuario
+app.get('/usuarios/:userId/tareas', async (req, res) => {
+  const { userId } = req.params;
 
   try {
     const usuario = await Usuario.findById(userId);
-    if (!usuario) return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+    if (!usuario) {
+      console.log(`❌ Usuario con ID ${userId} no encontrado`);
+      return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+    }
 
-    usuario.tareas = usuario.tareas.filter(
-      tarea => tarea._id.toString() !== tareaId
-    );
-
-    await usuario.save();
-    res.status(200).json({ mensaje: 'Tarea eliminada correctamente' });
+    console.log(`✅ Tareas obtenidas para usuario ${userId}`);
+    return res.json(usuario.tareas);
   } catch (error) {
-    console.error('❌ Error al eliminar tarea:', error);
-    res.status(500).json({ mensaje: 'Error al eliminar tarea', error });
+    console.error('❌ Error al obtener tareas:', error);
+    return res.status(500).json({ mensaje: 'Error al obtener tareas', error });
   }
 });
-// Evaluaciones
+
+// Eliminar una tarea por ID
+app.delete('/usuarios/:userId/tareas/:tareaId', async (req, res) => {
+  const { userId, tareaId } = req.params;
+
+  console.log(`🔍 Eliminando tarea ${tareaId} del usuario ${userId}`);
+
+  try {
+    const usuario = await Usuario.findById(userId);
+    if (!usuario) {
+      console.log(`❌ Usuario no encontrado: ${userId}`);
+      return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+    }
+
+    const originalLength = usuario.tareas.length;
+    usuario.tareas = usuario.tareas.filter(tarea => tarea._id.toString() !== tareaId);
+
+    if (usuario.tareas.length === originalLength) {
+      console.log(`⚠️ Tarea no encontrada: ${tareaId}`);
+      return res.status(404).json({ mensaje: 'Tarea no encontrada' });
+    }
+
+    await usuario.save();
+
+    console.log(`✅ Tarea eliminada correctamente`);
+    return res.status(200).json({ mensaje: 'Tarea eliminada correctamente' });
+
+  } catch (error) {
+    console.error('❌ Error al eliminar tarea:', error);
+    return res.status(500).json({ mensaje: 'Error interno al eliminar tarea', error });
+  }
+});
+
+// --- EVALUACIONES ---
+
+// Crear evaluación
 app.post('/usuarios/:id/evaluaciones', async (req, res) => {
   try {
     const usuario = await Usuario.findById(req.params.id);
@@ -145,12 +171,14 @@ app.post('/usuarios/:id/evaluaciones', async (req, res) => {
 
     usuario.evaluaciones.push(req.body);
     await usuario.save();
+
     res.status(201).json(usuario.evaluaciones);
   } catch (error) {
     res.status(500).json({ mensaje: 'Error al agregar evaluación', error });
   }
 });
 
+// Obtener evaluaciones
 app.get('/usuarios/:id/evaluaciones', async (req, res) => {
   try {
     const usuario = await Usuario.findById(req.params.id);
@@ -161,31 +189,18 @@ app.get('/usuarios/:id/evaluaciones', async (req, res) => {
     res.status(500).json({ mensaje: 'Error al obtener evaluaciones', error });
   }
 });
-// Eliminar evaluación
-app.delete('/usuarios/:userId/evaluaciones/:evalId', async (req, res) => {
-  const { userId, evalId } = req.params;
-
+// GET /usuarios/:id
+app.get('/usuarios/:id', async (req, res) => {
   try {
-    const usuario = await Usuario.findById(userId);
-    if (!usuario) {
-      return res.status(404).json({ mensaje: 'Usuario no encontrado' });
-    }
-
-    // Filtrar las evaluaciones excluyendo la que se desea eliminar
-    usuario.evaluaciones = usuario.evaluaciones.filter(
-      (ev) => ev._id.toString() !== evalId
-    );
-
-    await usuario.save();
-
-    res.status(200).json({ mensaje: 'Evaluación eliminada correctamente' });
-  } catch (error) {
-    console.error('❌ Error al eliminar evaluación:', error);
-    res.status(500).json({ mensaje: 'Error al eliminar evaluación', error });
+    const usuario = await Usuario.findById(req.params.id);
+    if (!usuario) return res.status(404).json({ error: 'Usuario no encontrado' });
+    res.json(usuario);
+  } catch (err) {
+    res.status(500).json({ error: 'Error al obtener datos del usuario' });
   }
 });
 // ==========================
-// Servidor
+// Iniciar servidor
 // ==========================
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
