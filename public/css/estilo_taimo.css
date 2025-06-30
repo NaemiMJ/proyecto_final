@@ -70,3 +70,26 @@ nav a:hover {
   margin: 0 0.3rem;
   cursor: pointer;
 }
+
+.badge-prioridad {
+  display: inline-block;
+  width: 180px;               
+  text-align: center;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  color: white;
+  font-size: 0.85rem;
+}
+
+.badge-prioridad.alta {
+  background-color: #e74c3c; /* rojo */
+}
+
+.badge-prioridad.media {
+  background-color: #e67e22; /* naranjo */
+}
+
+.badge-prioridad.baja {
+  background-color: #2ecc71; /* verde */
+}

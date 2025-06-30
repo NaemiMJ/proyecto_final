@@ -22,11 +22,29 @@ document.addEventListener("DOMContentLoaded", async () => {
   const div = document.createElement("div");
   div.className = "card my-3 p-3 shadow-sm";
 
-  div.innerHTML = `
-    <h5>${evaluacion.materia}</h5>
-    <p class="mb-1"><strong>Fecha:</strong> ${new Date(evaluacion.fecha_ev).toLocaleDateString()}</p>
-    <p><strong>Recordatorio:</strong> ${evaluacion.recordatorio ? "Sí" : "No"}</p>
-    <button class="btn btn-danger btn-sm mt-2 eliminar-btn" data-id="${evaluacion._id}">Eliminar</button>
+   div.innerHTML = `
+  <div class="d-flex flex-column">
+    <!-- Ramo -->
+    <h5 class="mb-2">${evaluacion.materia}</h5>
+
+    <!-- Fecha y campana + botón a la derecha -->
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-2">
+        <span class="text-muted small">
+          <strong>${new Date(evaluacion.fecha_ev).toLocaleDateString()}</strong>
+        </span>
+        <span 
+          class="fs-5"
+          title="${evaluacion.recordatorio ? 'Tiene recordatorio' : 'Sin recordatorio'}">
+          ${evaluacion.recordatorio ? "🔔" : "🔕"}
+        </span>
+      </div>
+      
+      <button class="btn btn-danger btn-sm eliminar-btn" data-id="${evaluacion._id}">
+        Eliminar
+      </button>
+    </div>
+  </div>
   `;
 
   evalContainer.appendChild(div);
@@ -94,5 +112,5 @@ document.getElementById("formNuevaEval").addEventListener("submit", async (e) =>
 // =======================
 document.getElementById("logoutBtn").addEventListener("click", () => {
   localStorage.removeItem("usuario");
-  window.location.href = "./login.html";
+  window.location.href = "../index.html";
 });

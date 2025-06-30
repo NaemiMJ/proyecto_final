@@ -1,4 +1,12 @@
 // =======================
+// Función para capitalizar la primera letra
+// =======================
+function capitalizar(texto) {
+  if (!texto) return "";
+  return texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase();
+}
+
+// =======================
 // Autenticación del usuario
 // =======================
 const usuario = JSON.parse(localStorage.getItem("usuario"));
@@ -41,21 +49,37 @@ function mostrarTareas(lista) {
     const card = document.createElement("div");
     card.className = "card my-3 p-3 shadow-sm";
 
-    let html = `<h5>${tarea.titulo}</h5>`;
+  let html = `
+    <div class="d-flex align-items-center justify-content-between flex-wrap mb-1">
+      <div class="d-flex align-items-center gap-3 flex-wrap">
+        <h5 class="mb-0">${tarea.titulo}</h5>
+        <span class="badge-prioridad ${tarea.prioridad.toLowerCase()}">
+          Prioridad: ${capitalizar(tarea.prioridad)}
+        </span>
+      </div>
+     <div class="form-check m-0 d-flex align-items-center gap-5">
+      <label class="form-check-label mb-0 " for="finalizada-${tarea._id}">Finalizado</label>
+      <input id="finalizada-${tarea._id}" class="form-check-input finalizada-checkbox" type="checkbox" data-id="${tarea._id}" ${tarea.finalizada ? "checked" : ""}>
+    </div>
+    </div>
+
+    <p class="mb-2"><strong>Fecha límite:</strong> ${new Date(tarea.fecha_limite).toLocaleDateString()}</p>
+`;
 
     if (tarea.descripcion?.trim()) {
       html += `<p><strong>Descripción:</strong> ${tarea.descripcion}</p>`;
     }
 
-    html += `
-      <p><strong>Prioridad:</strong> ${tarea.prioridad}</p>
-      <p><strong>Fecha límite:</strong> ${new Date(tarea.fecha_limite).toLocaleDateString()}</p>
-      <p><strong>Finalizada:</strong> ${tarea.finalizada ? "Sí" : "No"}</p>
-    `;
-
+    // Subtareas
     if (tarea.subtareas?.length > 0) {
-      const listaSub = tarea.subtareas.map(s => `<li>${s.nombre_sub} ${s.finalizada_sub ? '✅' : ''}</li>`).join("");
-      html += `<div><strong>Subtareas:</strong><ul>${listaSub}</ul></div>`;
+      const listaSub = tarea.subtareas.map((s, index) => `
+        <li>
+          <input type="checkbox" class="form-check-input me-2 subtarea-checkbox" 
+                 data-id="${tarea._id}" data-index="${index}" ${s.finalizada_sub ? 'checked' : ''}>
+          ${s.nombre_sub}
+        </li>`).join("");
+        
+      html += `<div><strong>Subtareas:</strong><ul class="list-unstyled">${listaSub}</ul></div>`;
     }
 
     html += `
@@ -70,31 +94,69 @@ function mostrarTareas(lista) {
     contenedor.appendChild(card);
   });
 
-  // Asignar eventos de eliminar
+  // Evento para eliminar tarea
   document.querySelectorAll('.eliminar-tarea').forEach(btn => {
     btn.addEventListener('click', async () => {
       const tareaId = btn.getAttribute('data-id');
-      console.log(`🗑 Intentando eliminar tarea ID: ${tareaId} para usuario: ${userId}`);
-
       if (confirm('¿Estás seguro de que deseas eliminar esta tarea?')) {
         try {
           const response = await fetch(`http://localhost:3000/usuarios/${userId}/tareas/${tareaId}`, {
             method: 'DELETE'
           });
 
-          if (!response.ok) {
-            const errorJson = await response.json();
-            console.log("⚠️ Error desde backend:", errorJson);
-            console.log("Status:", response.status);
-            throw new Error('Error al eliminar tarea');
-          }
-
+          if (!response.ok) throw new Error('Error al eliminar tarea');
           location.reload();
-
         } catch (error) {
           console.error('❌ Error al eliminar tarea:', error);
           alert('No se pudo eliminar la tarea.');
         }
+      }
+    });
+  });
+
+  // Evento para marcar tarea como finalizada
+  document.querySelectorAll('.finalizada-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', async () => {
+      const tareaId = checkbox.getAttribute('data-id');
+      const nuevaFinalizada = checkbox.checked;
+
+      try {
+        const response = await fetch(`http://localhost:3000/usuarios/${userId}/tareas/${tareaId}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ finalizada: nuevaFinalizada })
+        });
+
+        if (!response.ok) throw new Error("Error al actualizar tarea");
+      } catch (error) {
+        alert("No se pudo actualizar la tarea.");
+        checkbox.checked = !nuevaFinalizada;
+      }
+    });
+  });
+
+  // Evento para marcar subtareas
+  document.querySelectorAll('.subtarea-checkbox').forEach(checkbox => {
+    checkbox.addEventListener('change', async () => {
+      const tareaId = checkbox.getAttribute('data-id');
+      const index = checkbox.getAttribute('data-index');
+      const nuevaFinalizada = checkbox.checked;
+
+      try {
+        const response = await fetch(`http://localhost:3000/usuarios/${userId}/tareas/${tareaId}/subtareas/${index}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ finalizada_sub: nuevaFinalizada })
+        });
+
+        if (!response.ok) throw new Error("Error al actualizar subtarea");
+      } catch (error) {
+        alert("No se pudo actualizar la subtarea.");
+        checkbox.checked = !nuevaFinalizada;
       }
     });
   });
@@ -147,23 +209,17 @@ document.getElementById("formNuevaTarea").addEventListener("submit", async (e) =
 });
 
 // =======================
-// Ordenar por prioridad
+// Ordenar
 // =======================
 function ordenarPorPrioridad(tareas) {
   const prioridadValor = { alta: 1, media: 2, baja: 3 };
   return [...tareas].sort((a, b) => prioridadValor[a.prioridad] - prioridadValor[b.prioridad]);
 }
 
-// =======================
-// Ordenar por fecha límite
-// =======================
 function ordenarPorFecha(tareas) {
   return [...tareas].sort((a, b) => new Date(a.fecha_limite) - new Date(b.fecha_limite));
 }
 
-// =======================
-// Eventos para botones del dropdown
-// =======================
 document.getElementById("ordenPrioridad").addEventListener("click", () => {
   const tareasOrdenadas = ordenarPorPrioridad(tareasOriginales);
   mostrarTareas(tareasOrdenadas);
@@ -179,5 +235,5 @@ document.getElementById("ordenFecha").addEventListener("click", () => {
 // =======================
 document.getElementById("logoutBtn").addEventListener("click", () => {
   localStorage.removeItem("usuario");
-  window.location.href = "./login.html";
+  window.location.href = "../index.html";
 });

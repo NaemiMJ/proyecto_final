@@ -161,6 +161,52 @@ app.delete('/usuarios/:userId/tareas/:tareaId', async (req, res) => {
   }
 });
 
+app.patch('/usuarios/:userId/tareas/:tareaId', async (req, res) => {
+  const { userId, tareaId } = req.params;
+  const { finalizada } = req.body;
+
+  try {
+    const usuario = await Usuario.findById(userId);
+    if (!usuario) return res.status(404).json({ mensaje: "Usuario no encontrado" });
+
+    const tarea = usuario.tareas.id(tareaId);
+    if (!tarea) return res.status(404).json({ mensaje: "Tarea no encontrada" });
+
+    tarea.finalizada = finalizada;
+    await usuario.save();
+
+    res.json({ mensaje: "Tarea actualizada" });
+  } catch (error) {
+    console.error("❌ Error en PATCH:", error);
+    res.status(500).json({ mensaje: "Error al actualizar tarea" });
+  }
+});
+
+// Actualizar estado de subtarea
+app.patch('/usuarios/:userId/tareas/:tareaId/subtareas/:subIndex', async (req, res) => {
+  const { userId, tareaId, subIndex } = req.params;
+  const { finalizada_sub } = req.body;
+
+  try {
+    const usuario = await Usuario.findById(userId);
+    if (!usuario) return res.status(404).json({ mensaje: "Usuario no encontrado" });
+
+    const tarea = usuario.tareas.id(tareaId);
+    if (!tarea) return res.status(404).json({ mensaje: "Tarea no encontrada" });
+
+    const subtarea = tarea.subtareas[subIndex];
+    if (!subtarea) return res.status(404).json({ mensaje: "Subtarea no encontrada" });
+
+    subtarea.finalizada_sub = finalizada_sub;
+    await usuario.save();
+
+    res.json({ mensaje: "Subtarea actualizada" });
+  } catch (error) {
+    console.error("❌ Error al actualizar subtarea:", error);
+    res.status(500).json({ mensaje: "Error al actualizar subtarea" });
+  }
+});
+
 // --- EVALUACIONES ---
 
 // Crear evaluación
@@ -189,6 +235,38 @@ app.get('/usuarios/:id/evaluaciones', async (req, res) => {
     res.status(500).json({ mensaje: 'Error al obtener evaluaciones', error });
   }
 });
+app.delete('/usuarios/:userId/evaluaciones/:evalId', async (req, res) => {
+  const { userId, evalId } = req.params;
+
+  console.log(`🔍 Eliminando evaluación ${evalId} del usuario ${userId}`);
+
+  try {
+    const usuario = await Usuario.findById(userId);
+    if (!usuario) {
+      console.log(`❌ Usuario no encontrado: ${userId}`);
+      return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+    }
+
+    const originalLength = usuario.evaluaciones.length;
+    usuario.evaluaciones = usuario.evaluaciones.filter(ev => ev._id.toString() !== evalId);
+
+    if (usuario.evaluaciones.length === originalLength) {
+      console.log(`⚠️ Evaluación no encontrada: ${evalId}`);
+      return res.status(404).json({ mensaje: 'Evaluación no encontrada' });
+    }
+
+    await usuario.save();
+
+    console.log(`✅ Evaluación eliminada correctamente`);
+    return res.status(200).json({ mensaje: 'Evaluación eliminada correctamente' });
+
+  } catch (error) {
+    console.error('❌ Error al eliminar evaluación:', error);
+    return res.status(500).json({ mensaje: 'Error interno al eliminar evaluación', error });
+  }
+});
+
+
 // GET /usuarios/:id
 app.get('/usuarios/:id', async (req, res) => {
   try {
